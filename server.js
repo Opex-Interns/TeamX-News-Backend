@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import cron from "node-cron";
+import { swaggerSpec, swaggerUiMiddleware } from "./config/swagger.js";
 
 import connectDB from "./config/db.js";
 import newsRoutes from "./routes/newsRoutes.js";
@@ -23,6 +24,13 @@ await connectDB();
 // Routes
 app.use("/api/news", newsRoutes);
 app.use("/api/subscribers", subscriberRoutes);
+
+// Swagger Docs
+app.use(
+  "/api-docs",
+  swaggerUiMiddleware.serve,
+  swaggerUiMiddleware.setup(swaggerSpec)
+);
 
 // Cron: run daily at 8:00 AM Africa/Lagos
 cron.schedule(
