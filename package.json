@@ -4,6 +4,7 @@
   "description": "Backend for TeamX-News-Dashboard.",
   "main": "server.js",
   "scripts": {
+    "dev":"nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,6 +26,7 @@
     "gitignore": "^0.7.0",
     "google-spreadsheet": "^5.0.2",
     "googleapis": "^159.0.0",
+    "mongodb": "^6.19.0",
     "mongoose": "^8.18.1",
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.6",
