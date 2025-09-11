@@ -12,8 +12,12 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:5000", // adjust if deployed
-        description: "Local server",
+        url: "https://financedaily-backend.onrender.com", // adjust if deployed
+        description: "Production server",
+      },
+      {
+        url: "http://localhost:5000",
+        description: "Local Development Server",
       },
     ],
   },
