@@ -5,7 +5,7 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
+//import mongoose from "mongoose";
 import cron from "node-cron";
 import { swaggerSpec, swaggerUiMiddleware } from "./config/swagger.js";
 
@@ -52,8 +52,6 @@ app.listen(PORT, () =>
     console.log("Email:", process.env.GOOGLE_CLIENT_EMAIL);
 console.log("Key exists:", !!process.env.GOOGLE_PRIVATE_KEY);
 console.log("Using Google Service Account:", process.env.GOOGLE_CLIENT_EMAIL);
-console.log("EMAIL:", process.env.GOOGLE_CLIENT_EMAIL);
-console.log("PRIVATE_KEY starts with:", process.env.GOOGLE_PRIVATE_KEY?.substring(0, 30));
 
 
 
