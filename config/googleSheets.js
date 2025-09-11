@@ -1,14 +1,24 @@
+// config/googleSheets.js
 import { google } from "googleapis";
+import dotenv from "dotenv";
 
-export function getSheetsAuth() {
-  return new google.auth.JWT(
-    process.env.GOOGLE_CLIENT_EMAIL,
-    null,
-    (process.env.GOOGLE_PRIVATE_KEY || "").replace(/\\n/g, "\n"),
-    ["https://www.googleapis.com/auth/spreadsheets.readonly"]
-  );
+dotenv.config();
+
+// 🔒 Validate required environment variables
+function requireEnv(name) {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`❌ Missing required environment variable: ${name}`);
+  }
+  return value;
 }
 
-export function getSheetsClient(auth) {
-  return google.sheets({ version: "v4", auth });
+// 🟢 API Key (no private key or service account needed)
+const apiKey = requireEnv("GOOGLE_API_KEY");
+
+export function getSheetsClient() {
+  return google.sheets({
+    version: "v4",
+    auth: apiKey, // ✅ Just use API key
+  });
 }

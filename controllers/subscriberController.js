@@ -1,3 +1,4 @@
+//controllers/newSuscriberController
 import Subscriber from "../models/subscriber.js";
 import { fetchLatestNews } from "../services/newsService.js";
 import { sendNewsletter } from "../services/mailer.js";

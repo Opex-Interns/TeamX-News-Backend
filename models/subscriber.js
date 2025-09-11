@@ -1,3 +1,4 @@
+//models/sucriber
 import mongoose from "mongoose";
 
 const subscriberSchema = new mongoose.Schema({

@@ -1,4 +1,5 @@
-import { getSheetsAuth, getSheetsClient } from "../config/googleSheets.js";
+// services/newsService.js
+import { getSheetsClient } from "../config/googleSheets.js";
 
 /** Convert Sheet datetime cell to UNIX seconds */
 function toUnixSeconds(v) {
@@ -29,12 +30,11 @@ function mapRowToNews(row, index) {
 /** Core: fetch rows from Google Sheets and map to JSON */
 export async function fetchHeadlinesFromSheet() {
   try {
-    const auth = getSheetsAuth();
-    const sheets = getSheetsClient(auth);
+    const sheets = getSheetsClient();
 
     const resp = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: "Sheet1!A2:H", // A..H = 8 columns
+      range: "Sheet1!A2:H", // Adjust if sheet/tab name changes
     });
 
     const rows = resp.data.values || [];
@@ -48,10 +48,11 @@ export async function fetchHeadlinesFromSheet() {
 /** Optional helpers for controllers */
 export async function fetchLatestNews({ limit = 10, category } = {}) {
   let items = await fetchHeadlinesFromSheet();
-  if (category)
+  if (category) {
     items = items.filter(
       (n) => (n.category || "").toLowerCase() === category.toLowerCase()
     );
+  }
   // Sort by datetime desc if present
   items.sort((a, b) => (b.datetime || 0) - (a.datetime || 0));
   return items.slice(0, limit);

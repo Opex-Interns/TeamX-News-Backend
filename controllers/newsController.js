@@ -1,3 +1,4 @@
+//comtrollers/newController
 import { fetchLatestNews } from "../services/newsService.js";
 
 export async function getNews(req, res) {
