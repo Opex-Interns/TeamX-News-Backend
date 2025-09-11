@@ -1,8 +1,16 @@
 import nodemailer from "nodemailer";
+import Subscriber from "../models/subscriber.js";
+
+console.log("SMTP settings:", process.env.SMTP_HOST, process.env.SMTP_PORT);
 
 const transporter = nodemailer.createTransport({
-  service: "gmail", // replace with your SMTP provider if needed
-  auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: false, // use TLS
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
 });
 
 export async function sendNewsletter(
@@ -42,7 +50,7 @@ export async function sendNewsletter(
   `;
 
   await transporter.sendMail({
-    from: `"FinanceDaily" <${process.env.EMAIL_USER}>`,
+    from: `"FinanceDaily" <${process.env.SMTP_USER}>`,
     to: toField,
     subject,
     html,
