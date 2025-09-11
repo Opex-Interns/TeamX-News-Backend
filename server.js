@@ -1,11 +1,14 @@
+
 // server.js
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import cron from "node-cron";
 import { swaggerSpec, swaggerUiMiddleware } from "./config/swagger.js";
 import connectDB from "./config/db.js";
 import newsRoutes from "./routes/newsRoutes.js";
 import subscriberRoutes from "./routes/subscriberRoutes.js";
+import { runNewsletterJob } from "./services/newsletterJob.js";
 import jobs from "./config/cron.js";
 
 dotenv.config();
@@ -17,8 +20,8 @@ jobs.start();
 // Define your list of allowed domains
 const allowedOrigins = [
   "http://localhost:5000",
-  "https://financedaily-backend.onrender.com", // Common port for local Vite apps
-  "https://financedaily.netlify.app", // Your live production site
+  "https://financedaily-backend.onrender.com", 
+  "https://financedaily.netlify.app", 
 ];
 
 // Middleware
@@ -41,8 +44,21 @@ app.use(
   swaggerUiMiddleware.setup(swaggerSpec)
 );
 
+// ---------------------------
+// Cron Job (runs every minute)
+// ---------------------------
+cron.schedule(
+  "* * * * *",
+  async () => {
+    console.log("⏰ Running scheduled newsletter job…");
+    await runNewsletterJob();
+  },
+  { timezone: process.env.TZ || "Africa/Lagos" }
+);
+
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
+
