@@ -6,11 +6,13 @@ import { swaggerSpec, swaggerUiMiddleware } from "./config/swagger.js";
 import connectDB from "./config/db.js";
 import newsRoutes from "./routes/newsRoutes.js";
 import subscriberRoutes from "./routes/subscriberRoutes.js";
+import jobs from "./config/cron.js";
 
 dotenv.config();
 await connectDB();
 
 const app = express();
+jobs.start();
 
 // Define your list of allowed domains
 const allowedOrigins = [
