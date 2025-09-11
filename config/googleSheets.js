@@ -1,12 +1,24 @@
+// config/googleSheets.js
 import { google } from "googleapis";
+import dotenv from "dotenv";
 
-export function getSheetsAuth() {
-  return new google.auth.GoogleAuth({
-    keyFile: "config/financedaily-news-688de3ee0471.json", // path to your JSON file
-    scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
-  });
+dotenv.config();
+
+// 🔒 Validate required environment variables
+function requireEnv(name) {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`❌ Missing required environment variable: ${name}`);
+  }
+  return value;
 }
 
-export function getSheetsClient(auth) {
-  return google.sheets({ version: "v4", auth });
+// 🟢 API Key (no private key or service account needed)
+const apiKey = requireEnv("GOOGLE_API_KEY");
+
+export function getSheetsClient() {
+  return google.sheets({
+    version: "v4",
+    auth: apiKey, // ✅ Just use API key
+  });
 }

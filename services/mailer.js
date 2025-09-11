@@ -1,12 +1,10 @@
+//mailer
 import nodemailer from "nodemailer";
-import Subscriber from "../models/subscriber.js";
-
-console.log("SMTP settings:", process.env.SMTP_HOST, process.env.SMTP_PORT);
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
-  secure: false, // use TLS
+  secure: true, // true if port 465, false for 587
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -24,9 +22,7 @@ export async function sendNewsletter(
     .map(
       (n) => `
     <li style="margin:8px 0;">
-      <a href="${
-        n.url
-      }" target="_blank" style="text-decoration:none;color:#2563eb;">
+      <a href="${n.url}" target="_blank" style="text-decoration:none;color:#2563eb;">
         ${n.headline}
       </a>
       <div style="font-size:12px;color:#6b7280;">
