@@ -21,9 +21,9 @@ function mapRowToNews(row, index) {
     headline: row[2] || "Untitled headline",
     id: row[3] ? Number(row[3]) : index + 1,
     image: row[4] || "https://via.placeholder.com/800x400?text=No+Image",
-    source: row[5] || "Unknown",
-    summary: row[6] || "",
-    url: row[7] || "#",
+    source: row[6] || "Unknown",
+    summary: row[7] || "",
+    url: row[8] || "#",
   };
 }
 
