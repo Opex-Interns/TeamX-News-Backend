@@ -20,10 +20,10 @@ function mapRowToNews(row, index) {
     datetime: toUnixSeconds(row[1]),
     headline: row[2] || "Untitled headline",
     id: row[3] ? Number(row[3]) : index + 1,
-    image: row[4] || "https://via.placeholder.com/800x400?text=No+Image",
-    source: row[6] || "Unknown",
-    summary: row[7] || "",
-    url: row[8] || "#",
+    image: row[4] || "https://share.google/images/JQCdhWuXx6DOjbAMZ",
+    source: row[5] || "Unknown",
+    summary: row[6] || "",
+    url: row[7] || "#",
   };
 }
 
@@ -46,7 +46,7 @@ export async function fetchHeadlinesFromSheet() {
 }
 
 /** Optional helpers for controllers */
-export async function fetchLatestNews({ limit = 10, category } = {}) {
+export async function fetchLatestNews({ limit = 20, category } = {}) {
   let items = await fetchHeadlinesFromSheet();
   if (category) {
     items = items.filter(
