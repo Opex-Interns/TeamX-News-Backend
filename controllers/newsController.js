@@ -3,14 +3,15 @@ import NewsCache from "../models/newsCache.js";
 import { fetchLatestNews } from "../services/newsService.js";
 
 /**
- * Get news from MongoDB (cached) or Sheets fallback
+ * Get paginated news from MongoDB (cached) or Sheets fallback
  */
 export async function getNews(req, res) {
   try {
-    const limit = Number(req.query.limit || 20);
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const limit = Math.max(1, Number(req.query.limit) || 20);
     const category = req.query.category;
 
-    // Fetch from MongoDB cache
+    // Fetch all cached items
     let items = await NewsCache.find().sort({ datetime: -1 }).lean();
 
     // Filter by category if provided
@@ -20,12 +21,24 @@ export async function getNews(req, res) {
       );
     }
 
-    // If MongoDB is empty (first run), fallback to Sheets
+    // Fallback if cache is empty
     if (!items.length) {
-      items = await fetchLatestNews({ limit, category });
+      items = await fetchLatestNews({ limit: 100, category });
     }
 
-    res.json(items.slice(0, limit));
+    // Pagination logic
+    const total = items.length;
+    const totalPages = Math.ceil(total / limit);
+    const start = (page - 1) * limit;
+    const paginated = items.slice(start, start + limit);
+
+    res.json({
+      page,
+      limit,
+      total,
+      totalPages,
+      data: paginated,
+    });
   } catch (err) {
     res.status(500).json({
       message: "Error fetching news",

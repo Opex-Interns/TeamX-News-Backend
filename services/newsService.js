@@ -45,8 +45,8 @@ export async function fetchHeadlinesFromSheet() {
   }
 }
 
-/** Optional helpers for controllers */
-export async function fetchLatestNews({ limit = 20, category } = {}) {
+/** Fetch latest news with pagination */
+export async function fetchLatestNews({ page = 1, limit = 20, category } = {}) {
   let items = await fetchHeadlinesFromSheet();
 
   if (category) {
@@ -58,5 +58,17 @@ export async function fetchLatestNews({ limit = 20, category } = {}) {
   // Sort by datetime desc
   items.sort((a, b) => (b.datetime || 0) - (a.datetime || 0));
 
-  return items.slice(0, limit);
+  // Pagination logic
+  const total = items.length;
+  const totalPages = Math.ceil(total / limit);
+  const startIndex = (page - 1) * limit;
+  const paginated = items.slice(startIndex, startIndex + limit);
+
+  return {
+    page,
+    limit,
+    total,
+    totalPages,
+    data: paginated,
+  };
 }
