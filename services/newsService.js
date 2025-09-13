@@ -16,14 +16,14 @@ function toUnixSeconds(v) {
 /** Map a Sheet row (array) → News object */
 function mapRowToNews(row, index) {
   return {
-    category: row[0] || "general",
+    category: row[0]?.trim() || "general",
     datetime: toUnixSeconds(row[1]),
-    headline: row[2] || "Untitled headline",
+    headline: row[2]?.trim() || "Untitled headline",
     id: row[3] ? Number(row[3]) : index + 1,
     image: row[4] || "https://share.google/images/JQCdhWuXx6DOjbAMZ",
-    source: row[5] || "Unknown",
-    summary: row[6] || "",
-    url: row[7] || "#",
+    source: row[5]?.trim() || "Unknown",
+    summary: row[6]?.trim() || "",
+    url: row[7]?.trim() || "#",
   };
 }
 
@@ -34,11 +34,11 @@ export async function fetchHeadlinesFromSheet() {
 
     const resp = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: "Sheet1!A2:H", // Adjust if sheet/tab name changes
+      range: "CBN News!A2:H", // 👈 adjust if sheet/tab name changes
     });
 
     const rows = resp.data.values || [];
-    return rows.map(mapRowToNews);
+    return rows.map((row, idx) => mapRowToNews(row, idx));
   } catch (err) {
     console.error("❌ Error fetching from Google Sheets:", err.message);
     return [];
@@ -48,12 +48,15 @@ export async function fetchHeadlinesFromSheet() {
 /** Optional helpers for controllers */
 export async function fetchLatestNews({ limit = 20, category } = {}) {
   let items = await fetchHeadlinesFromSheet();
+
   if (category) {
     items = items.filter(
       (n) => (n.category || "").toLowerCase() === category.toLowerCase()
     );
   }
-  // Sort by datetime desc if present
+
+  // Sort by datetime desc
   items.sort((a, b) => (b.datetime || 0) - (a.datetime || 0));
+
   return items.slice(0, limit);
 }
