@@ -27,7 +27,7 @@ export async function sendNewsletter(
     .map(
       (n) => `
       <li style="margin:8px 0;">
-        <a href="${n.url}" target="_blank" style="text-decoration:none;color:#2563eb;">
+        <a href="https://financedaily.netlify.app/" target="_blank" style="text-decoration:none;color:#2563eb;">
           ${n.headline}
         </a>
         <div style="font-size:12px;color:#6b7280;">
